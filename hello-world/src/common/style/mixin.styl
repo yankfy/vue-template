@@ -1,0 +1,225 @@
+bg-position($x, $y)
+	background-position $x $y
+
+bg-image($url, $x = 0, $y = 0, $size = cover, $repeat = no-repeat)
+	background-image url($url)
+	bg-position($x, $y)
+	background-size $size
+	background-repeat $repeat
+
+bg-color($color, $opacity = false)
+	background-color $color
+
+	if ($opacity)
+		opacity($opacity)
+
+font($size, $color, $weight = false, $font-family = $Font-family)
+	font-size $size // 移动端: calculateRem($size);
+	color $color
+	font-family $font-family
+
+	if ($weight)
+		font-weight $weight
+
+small-font()
+	transform-origin center
+	transform scale(0.9)
+
+next-line()
+	word-wrap break-word
+	word-break break-all
+	white-space pre-wrap !important
+
+size($w, $h = $w, $l = false)
+	width $w
+	height $h
+
+	if ($l)
+		line-height $h
+
+padding($way = false, args...)
+	if ($way)
+		padding-{$way} args
+	else
+		padding args
+
+margin($way = false, args...)
+	if ($way)
+		margin-{$way} args
+	else
+		margin args
+
+radius($r)
+	border-radius $r
+
+border($size = false, $color = transparent, $style = solid, $radius = false, $way = false)
+	if (!$size)
+		border none
+	else
+		if ($way)
+			border-{$way} $size $style $color
+		else
+			border $size $style $color
+
+		if ($radius)
+			radius($radius)
+
+outline($size = false, $color = transparent, $style = solid, $radius = false, $way = false)
+	if (!$size)
+		outline none
+	else
+		if ($way)
+			outline-{$way} $size $style $color
+		else
+			outline $size $style $color
+
+		if ($radius)
+			radius($radius)
+
+underline()
+	text-decoration underline
+
+overflow($ox = false, $oy = false)
+	if (!$ox && !$oy)
+		overflow hidden
+	else
+		if ($ox)
+			overflow-x $ox
+
+		if ($oy)
+			overflow-y $oy
+
+flex($h = center, $v = center, $column = false)
+	display flex
+	justify-content $h
+	align-items $v
+
+	if ($column)
+		flex-direction $column
+
+flex-self($v, $h = false)
+	display flex
+	align-self $v
+
+	if ($h)
+		justify-self $h
+
+offset($t, $r, $b, $l)
+	if ($t != auto)
+		top $t
+
+	if ($l != auto)
+		left $l
+
+	if ($r != auto)
+		right $r
+
+	if ($b != auto)
+		bottom $b
+
+z-index($zindex)
+	z-index $zindex
+
+position($a = absolute, $t = auto, $r = auto, $b = auto, $l = auto, $zindex = false, $center = false)
+	position $a
+	offset($t, $r, $b, $l)
+
+	if ($zindex)
+		z-index($zindex)
+
+	if ($center)
+		transform translate(-50%, -50%)
+
+clearfix()
+	&:before, &:after
+		content ''
+		display table
+
+	&:after
+		clear both
+
+box-shadow($top, $left, $blur, $color, $inset = false)
+	if ($inset)
+		box-shadow $top $left $blur $color $inset
+	else
+		box-shadow $top $left $blur $color
+
+ellipses-one()
+	overflow hidden
+	text-overflow ellipsis
+	white-space nowrap
+
+ellipsis-line($line)
+	display -webkit-box
+	-webkit-box-orient vertical
+	-webkit-line-clamp $line // 行数
+	overflow hidden
+
+content($content = false)
+	display inline-block
+	content ''
+
+arrow-way($way, $color)
+	if ($way == top)
+		border-color transparent transparent $color transparent
+	else if ($way == bottom)
+		border-color $color transparent transparent transparent
+	else if ($way == left)
+		border-color transparent transparent transparent $color
+	else if ($way == right)
+		border-color transparent $color transparent transparent
+
+arrow($r, $color, $way = top)
+	border-width $r $r $r $r
+	border-style solid
+	arrow-way($way, $color)
+
+// ! 移动端
+// * rem优雅降级
+calculateRem($size = $Font16)
+	unit(($size / $Font16), 'rem')
+
+// * 1px边框
+border-1px(color)
+	position relative
+
+	&:after
+		display block
+		position absolute
+		left 0
+		bottom 0
+		border-top 1px solid color
+		content ''
+		width 100%
+
+// !IE
+opacity($opacity)
+	opacity $opacity
+
+// 定义滚动条样式
+scrollBar($width = 10px, $height = 10px, $outColor = $bgColor, $innerColor = $bgGrey, $radius = 5px, $shadow = null, args...)
+	/* 定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸 */
+	&::-webkit-scrollbar
+		size($width, $height)
+		bg-color($outColor)
+
+	/* 定义滚动条轨道 内阴影+圆角 */
+	&::-webkit-scrollbar-track
+		if ($shadow != null)
+			box-shadow(args)
+
+		if ($radius != null)
+			radius($radius)
+
+		bg-color($outColor)
+
+	/* 定义滑块 内阴影+圆角 */
+	&::-webkit-scrollbar-thumb
+		if ($shadow != null)
+			box-shadow(args)
+
+		if ($radius != null)
+			radius($radius)
+
+		bg-color($innerColor)
+		border(1px, $innerColor)

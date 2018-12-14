@@ -1,0 +1,17 @@
+@import ('~@/common/style/custom')
+
+.hello
+  flex(flex-start, , column)
+  color black
+  size(100%, 500px)
+
+  h1
+    position relative
+    font(30px, yellow, 1000, 'KPMG')
+    size(200px, 100px, true)
+    bg-color(red, 1)
+
+    &:after
+      content()
+      position(absolute, -16px, auto, auto, 0)
+      arrow(8px, yellow)
