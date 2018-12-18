@@ -646,17 +646,86 @@ class Car implements Alarm {
 console.log(SecurityDoor.alert())
 console.log(Car.alert())
 ```
+
 > 接口继承接口
-```ts
-interface A extends B {
 
-}
+```ts
+interface A extends B {}
 ```
+
 > 接口继承类
-```ts
-interface C extends D {
 
+```ts
+interface C extends D {}
+```
+
+> 混合类型 **函数也可以有自己的属性和方法**
+
+## 泛型
+
+**泛型 在定义函数、接口、或类的时候，不预先指定具体的类型，而在使用的时候再指定类型的一种特性**<br> `Array<any>`允许数组的每一项都为任意类型。
+
+```ts
+function createArray<T>(length: number, value: T): Array<T> {
+  let result: T[] = []
+  for (let i = 0; i < length; i++) {
+    result[i] = value
+  }
+  return result
+}
+
+createArray<string>(3, 'x') // ['x', 'x', 'x'] //调用的时候，可以指定具体的类型 string
+createArray(3, 'x') //也可以不指定，按类型自动推算。
+```
+
+> 多个类型参数
+
+```ts
+function swap<U,P>(tuple:[T,U]):[U:T]{
+  return [tuple[1],tuple[0]]
+}
+swap([1,'one'])
+```
+
+- Array<T> 符合 T 类型的数组泛型约束
+- <T>source 在 T 类型约束下的 source 变量 <T>source
+- T[] 约束数组为 T 类型 result: T[] = [] (T 类型 空数组)
+
+> 泛型接口
+
+**在使用泛型接口的时候，需要定义泛型的类型。**
+
+> 泛型类
+
+```ts
+class GeneralNumber<T> {
+  zero: T
+  add: (x: T, y: T) => T
+}
+let number = new GeneralNumber()
+number.zero = 0
+number.add = (x, y) => x + y
+```
+
+## 声明合并
+
+> 函数声明的合并
+
+```ts
+function reverse(x: number): number
+function reverse(x: string): string
+function reverse(x: string | number): string | number {}
+```
+
+> 接口的合并
+
+**接口中的属性在合并时会简单合并到一个接口中**
+*合并的属性类型必须是唯一的*
+```ts
+interface Alarm {
+  price: number
+}
+interface Alarm {
+  weight: number
 }
 ```
-> 混合类型
-**函数也可以有自己的属性和方法**

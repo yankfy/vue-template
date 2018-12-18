@@ -159,21 +159,124 @@
 // console.log((new Car).alert())
 
 // ! 混合类型，函数有自己的方法和属性
-interface Counter {
-  (start: number):string;
-  interval: number;
-  reset(): void;
+// interface Counter {
+//   (start: number):string;
+//   interval: number;
+//   reset(): void;
+// }
+
+// function getCounter(): Counter {
+//   let counter = <Counter>function(start: number) {}
+//   counter.interval = 123
+//   counter.reset = function() {}
+//   console.log(counter)
+//   return counter
+// }
+
+// let c = getCounter()
+// c(10);
+// c.reset();
+// c.interval = 5.0;
+
+// ! 数组泛型举例
+// function createArray(length: number, value: any): Array<any> {
+//   let result = [];
+//   for(let i=0;i<length;i++){
+//     result[i] = value
+//   }
+//   return result
+// }
+// // createArray(3,'x')
+// console.log(createArray(3,'x'))
+
+// function createArray<T>(length: number, value: T): Array<T> {
+//   let result: T[] = []
+//   for (let i = 0; i < length; i++) {
+//     result[i] = value
+//   }
+//   return result
+// }
+
+// createArray<string>(3, 'x') // ['x', 'x', 'x']
+
+// function swap<U,T>(tuple:[T,U]):[U,T]{
+//   return [tuple[1],tuple[0]]
+// }
+// console.log(swap([1,'one']))
+
+// ! 多个参数之间互相约束
+// 约束 参数 输出
+// function copyFields<T extends U, U>(target: T, source: U): T {
+//   for (let id in source) {
+//     // console.log(<T>source) // ! T类型约束下的source
+//     target[id] = (<T>source)[id] // ! 删除掉T后报错 不能把 U 类型赋值给 T 类型。
+//   }
+//   return target
+// }
+
+// let x = { a: 1, b: 2, c: 3, d: 4 }
+
+// copyFields(x, { b: 10, d: 20 })
+
+// ! 泛型接口
+// interface CreateArrayFunc {
+//   <T>(length: number, value: T): Array<T> // ! <T>放在前面是为了能够找到 T
+// }
+
+// let createArray: CreateArrayFunc
+// createArray = function<T>(length: number, value: T): Array<T> {
+//   let result: T[] = []
+//   for (let i = 0; i < length; i++) {
+//     result[i] = value
+//   }
+//   return result
+// }
+
+// console.log(createArray(3, true)) // ['x', 'x', 'x']
+
+// function s<T,U>(a:T,b:U):Array<T>{
+//   let result:T[] = [a,<T>b]
+//   let solution:U[] = [b]
+//   return [result]
+// }
+// s('3',5555)
+
+// class GeneralNumber<T> {
+//   zero: T
+//   add: (x: T, y: T) => T
+// }
+// let number = new GeneralNumber()
+// number.zero = 0
+// number.add = function(x, y){
+//   return x + y
+// }
+
+function extend<T, U>(first: T, second: U): T & U {
+  let result = <T & U>{};
+  for (let id in first) {
+      (<any>result)[id] = (<any>first)[id];
+  }
+  for (let id in second) {
+      if (!result.hasOwnProperty(id)) {
+          (<any>result)[id] = (<any>second)[id];
+      }
+  }
+  return result;
 }
 
-function getCounter(): Counter {
-  let counter = <Counter>function(start: number) {}
-  counter.interval = 123
-  counter.reset = function() {}
-  console.log(counter)
-  return counter
+class Person {
+  constructor(public name: string) { }
 }
-
-let c = getCounter()
-c(10);
-c.reset();
-c.interval = 5.0;
+interface Loggable {
+  log(): void;
+}
+class ConsoleLogger implements Loggable {
+  log() {
+      // ...
+      console.log('aaa')
+  }
+}
+var jim = extend(new Person("Jim"), new ConsoleLogger());
+console.log(jim)
+var n = jim.name;
+jim.log();
