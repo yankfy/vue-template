@@ -15,9 +15,5 @@
     "ordered-imports": false,
     "object-literal-sort-keys": false,
     "no-consecutive-blank-lines": false
-  },
-  "compilerOptions": {
-    "experimentalDecorators": true,
-    "allowJs": true
   }
 }
